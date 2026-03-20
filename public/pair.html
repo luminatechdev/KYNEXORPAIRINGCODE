@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pair Session — KynexorTechnologies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://files.catbox.moe/1fn0ou.png') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.74);
+      z-index: -1;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .back {
+      align-self: flex-start;
+      margin-bottom: 16px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back:hover { color: rgba(255,255,255,0.85); }
+
+    .icon-wrap {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 14px rgba(200,160,255,0.5));
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #c8a0ff, #ff6ef7, #a0c8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.83rem;
+      margin-bottom: 28px;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .step {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .step.active { border-color: rgba(155,89,245,0.5); color: #c8a0ff; background: rgba(155,89,245,0.1); }
+
+    label {
+      display: block;
+      text-align: left;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    input[type="tel"] {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="tel"]:focus {
+      border-color: rgba(155,89,245,0.6);
+      box-shadow: 0 0 0 3px rgba(155,89,245,0.15);
+    }
+    input[type="tel"]::placeholder { color: rgba(255,255,255,0.25); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #9b59f5, #c844e0);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(155,89,245,0.35);
+    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(155,89,245,0.5); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .code-section {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    .code-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .code-box {
+      background: rgba(155,89,245,0.1);
+      border: 1px solid rgba(155,89,245,0.3);
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 2rem;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: #c8a0ff;
+      text-align: center;
+      margin-bottom: 12px;
+      text-shadow: 0 0 20px rgba(200,160,255,0.4);
+    }
+
+    .code-box.loading {
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .code-box.error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      border-color: rgba(255,107,107,0.3);
+      background: rgba(255,107,107,0.08);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-copy {
+      width: 100%;
+      padding: 11px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .btn-copy.copied { border-color: rgba(100,220,100,0.4); color: #7aff7a; background: rgba(100,220,100,0.08); }
+
+    .hint {
+      margin-top: 20px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .footer-link {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+  <a class="back" href="/home.html">← Back to Home</a>
+  <div class="card">
+    <div class="icon-wrap">🔗</div>
+    <h1>KYNEXOR PAIR SESSION</h1>
+    <p class="subtitle">Enter your WhatsApp number to receive a secure pairing code</p>
+
+    <div class="steps">
+      <div class="step active">① Enter Number</div>
+      <div class="step">② Get Code</div>
+      <div class="step">③ Scan in WA</div>
+    </div>
+
+    <label for="number">Phone Number</label>
+    <input type="tel" id="number" placeholder="e.g. 27751014718" />
+    <button class="btn-primary" id="genBtn" onclick="getPairCode()">Generate Pairing Code</button>
+
+    <div class="code-section" id="codeSection">
+      <p class="code-label">Your Pairing Code</p>
+      <div class="code-box" id="codeBox"></div>
+      <button class="btn-copy" id="copyBtn" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+
+    <div class="hint">
+      💡 <strong>How to use:</strong> Open WhatsApp → Linked Devices → Link a Device → Link with phone number → Enter this code.
+    </div>
+  </div>
+  <a class="footer-link" href="/validate.html">🔍 Validate an existing session</a>
+
+  <script>
+    async function getPairCode() {
+      const number = document.getElementById('number').value.trim().replace(/\D/g, '');
+      const codeSection = document.getElementById('codeSection');
+      const codeBox = document.getElementById('codeBox');
+      const copyBtn = document.getElementById('copyBtn');
+      const genBtn = document.getElementById('genBtn');
+
+      if (!number || number.length < 10) {
+        alert('Please enter a valid number with country code (e.g. 27751014718)');
+        return;
+      }
+
+      genBtn.disabled = true;
+      genBtn.textContent = '⏳ Generating...';
+      codeBox.className = 'code-box loading';
+      codeBox.textContent = 'Connecting to WhatsApp...';
+      codeSection.style.display = 'block';
+      copyBtn.style.display = 'none';
+
+      try {
+        const res = await fetch(`/code?number=${number}`);
+        const data = await res.json();
+
+        if (data.code) {
+          const formatted = data.code.replace(/(.{4})(?=.)/g, '$1-');
+          codeBox.className = 'code-box';
+          codeBox.textContent = formatted;
+          copyBtn.style.display = 'block';
+          copyBtn.className = 'btn-copy';
+          copyBtn.textContent = '📋 Copy Code';
+        } else {
+          codeBox.className = 'code-box error';
+          codeBox.textContent = '❌ ' + (data.error || 'Failed to generate code. Try again.');
+        }
+      } catch (err) {
+        codeBox.className = 'code-box error';
+        codeBox.textContent = '❌ Server offline or network error.';
+      } finally {
+        genBtn.disabled = false;
+        genBtn.textContent = 'Generate Pairing Code';
+      }
+    }
+
+    function copyCode() {
+      const raw = document.getElementById('codeBox').textContent.replace(/-/g, '');
+      navigator.clipboard.writeText(raw).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.className = 'btn-copy copied';
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          btn.className = 'btn-copy';
+          btn.textContent = '📋 Copy Code';
+        }, 2500);
+      }).catch(() => alert('❌ Could not copy. Please copy manually.'));
+    }
+
+    document.getElementById('number').addEventListener('keypress', e => {
+      if (e.key === 'Enter') getPairCode();
+    });
+  </script>
+</body>
+</html>

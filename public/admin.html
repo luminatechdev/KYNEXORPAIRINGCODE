@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — KynexorTechnologies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://files.catbox.moe/1fn0ou.png') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      z-index: -1;
+    }
+
+    .back {
+      align-self: flex-start;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back:hover { color: rgba(255,255,255,0.85); }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .icon-wrap {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 14px rgba(255,100,100,0.4));
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #ff8888, #ffb347, #ff6ef7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.82rem;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="password"]:focus {
+      border-color: rgba(255,100,100,0.5);
+      box-shadow: 0 0 0 3px rgba(255,100,100,0.1);
+    }
+    input[type="password"]::placeholder { color: rgba(255,255,255,0.2); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(231,76,60,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(231,76,60,0.45); }
+
+    .error-msg {
+      color: #ff8888;
+      font-size: 0.83rem;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    /* Session list */
+    .session-list {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 24px;
+      display: none;
+    }
+
+    .session-list h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .loading-msg {
+      text-align: center;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.88rem;
+      padding: 20px;
+    }
+
+    .session {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .session strong { color: #fff; font-size: 0.92rem; }
+    .session small { color: rgba(255,255,255,0.35); font-size: 0.78rem; font-family: monospace; }
+
+    .session-buttons {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .session-buttons button {
+      flex: 1;
+      padding: 8px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .session-buttons button:hover { opacity: 0.8; }
+
+    .view-btn { background: rgba(52,152,219,0.8); color: #fff; }
+    .edit-btn { background: rgba(243,156,18,0.8); color: #fff; }
+    .delete-btn { background: rgba(231,76,60,0.8); color: #fff; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/home.html">← Back to Home</a>
+
+  <div class="card" id="loginCard">
+    <div class="icon-wrap">🔒</div>
+    <h1>ADMIN PANEL</h1>
+    <p class="subtitle">Restricted access — owners only</p>
+
+    <label for="adminPass">Admin Password</label>
+    <input type="password" id="adminPass" placeholder="Enter password" />
+    <button class="btn-primary" onclick="validateAdmin()">Access Panel</button>
+    <p class="error-msg" id="loginError"></p>
+  </div>
+
+  <div class="session-list" id="adminPanel">
+    <h2>📁 Stored Sessions</h2>
+    <div class="loading-msg" id="loadingMsg">Loading sessions...</div>
+    <div id="sessions"></div>
+  </div>
+
+  <script>
+    async function validateAdmin() {
+      const pass = document.getElementById('adminPass').value;
+      const res = await fetch('/admin/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pass })
+      });
+
+      if (res.ok) {
+        document.getElementById('loginCard').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        window.adminPass = pass;
+        loadSessions(pass);
+      } else {
+        document.getElementById('loginError').textContent = '❌ Incorrect password. Access denied.';
+      }
+    }
+
+    async function loadSessions(pass) {
+      const loading = document.getElementById('loadingMsg');
+      const container = document.getElementById('sessions');
+      loading.style.display = 'block';
+
+      const res = await fetch('/admin/sessions', {
+        headers: { 'x-admin-password': pass }
+      });
+
+      loading.style.display = 'none';
+      const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        container.innerHTML = '<p style="color:#ff8888;text-align:center;">Failed to load sessions.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      if (data.length === 0) {
+        container.innerHTML = '<p style="color:rgba(255,255,255,0.3);text-align:center;font-size:0.88rem;">No sessions found.</p>';
+        return;
+      }
+
+      data.forEach(session => {
+        const div = document.createElement('div');
+        div.className = 'session';
+        div.innerHTML = `
+          <strong>${session.name}</strong><br>
+          <small>${session.id}</small>
+          <div class="session-buttons">
+            <button class="view-btn" onclick="viewSession('${session.id}')">👁 View</button>
+            <button class="edit-btn" onclick="editSession('${session.id}')">✏️ Edit</button>
+            <button class="delete-btn" onclick="deleteSession('${session.id}')">🗑 Delete</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function viewSession(id) { window.open(`/admin/view/${id}`, '_blank'); }
+
+    async function editSession(id) {
+      const content = prompt('Paste updated session JSON:');
+      if (!content) return;
+      const res = await fetch(`/admin/session/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': window.adminPass },
+        body: JSON.stringify({ content })
+      });
+      alert(res.ok ? '✅ Session updated.' : '❌ Failed to update session.');
+    }
+
+    async function deleteSession(id) {
+      if (!confirm('Delete this session permanently?')) return;
+      const res = await fetch(`/admin/delete/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-password': window.adminPass }
+      });
+      if (res.ok) { alert('✅ Session deleted.'); loadSessions(window.adminPass); }
+      else alert('❌ Failed to delete session.');
+    }
+
+    document.getElementById('adminPass').addEventListener('keypress', e => {
+      if (e.key === 'Enter') validateAdmin();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validate Session — KynexorTechnologies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://files.catbox.moe/1fn0ou.png') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.74);
+      z-index: -1;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .back {
+      align-self: flex-start;
+      margin-bottom: 16px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back:hover { color: rgba(255,255,255,0.85); }
+
+    .icon-wrap {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 14px rgba(100,220,200,0.5));
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #64dcc8, #a0c8ff, #c8a0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.83rem;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: rgba(100,220,200,0.5);
+      box-shadow: 0 0 0 3px rgba(100,220,200,0.1);
+    }
+    input[type="text"]::placeholder { color: rgba(255,255,255,0.25); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #2ecc8f, #1aa88c);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(46,204,143,0.3);
+    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(46,204,143,0.45); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .result-section {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    .result-box {
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .result-box.loading {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+    .result-box.valid {
+      background: rgba(46,204,143,0.1);
+      border: 1px solid rgba(46,204,143,0.3);
+      color: #7aff7a;
+    }
+    .result-box.invalid {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.25);
+      color: #ff8888;
+    }
+
+    .result-box .phone {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 6px;
+    }
+
+    .footer-link {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+  <a class="back" href="/home.html">← Back to Home</a>
+  <div class="card">
+    <div class="icon-wrap">✅</div>
+    <h1>VALIDATE SESSION</h1>
+    <p class="subtitle">Check if your session ID is valid and active</p>
+
+    <label for="sessionId">Session ID</label>
+    <input type="text" id="sessionId" placeholder="KYNEXOR-TECHNOLOGIES=XXXXXXXXXXXXXXXXXX" />
+    <button class="btn-primary" id="valBtn" onclick="validateSession()">Validate Session</button>
+
+    <div class="result-section" id="resultSection">
+      <div class="result-box" id="resultBox"></div>
+    </div>
+  </div>
+  <a class="footer-link" href="/pair.html">🔗 Pair a new session</a>
+
+  <script>
+    async function validateSession() {
+      const raw = document.getElementById('sessionId').value.trim();
+      const resultSection = document.getElementById('resultSection');
+      const resultBox = document.getElementById('resultBox');
+      const valBtn = document.getElementById('valBtn');
+
+      if (!raw || !raw.includes('=')) {
+        alert('Please enter a valid session ID (e.g. KYNEXOR-TECHNOLOGIES=XXXXXX)');
+        return;
+      }
+
+      const sessionId = raw.replace(/^.*=/, '').trim();
+      valBtn.disabled = true;
+      valBtn.textContent = '⏳ Checking...';
+      resultBox.className = 'result-box loading';
+      resultBox.innerHTML = 'Validating session...';
+      resultSection.style.display = 'block';
+
+      try {
+        const res = await fetch(`/validate/${sessionId}`);
+        const data = await res.json();
+
+        if (res.ok && data.status === 'valid') {
+          resultBox.className = 'result-box valid';
+          resultBox.innerHTML = `✅ <strong>Session is valid!</strong><div class="phone">📞 ${data.phone || 'Unknown'}</div>`;
+        } else {
+          resultBox.className = 'result-box invalid';
+          resultBox.innerHTML = `❌ <strong>Session Invalid</strong><br><span style="font-size:0.82rem;opacity:0.7;">${data.message || 'This session does not exist or has expired. Please re-pair.'}</span>`;
+        }
+      } catch (err) {
+        resultBox.className = 'result-box invalid';
+        resultBox.innerHTML = '❌ Server offline or network error.';
+      } finally {
+        valBtn.disabled = false;
+        valBtn.textContent = 'Validate Session';
+      }
+    }
+
+    document.getElementById('sessionId').addEventListener('keypress', e => {
+      if (e.key === 'Enter') validateSession();
+    });
+  </script>
+</body>
+</html>
