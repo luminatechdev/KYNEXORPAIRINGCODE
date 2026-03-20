@@ -2,7 +2,7 @@
 import fs from 'fs';
 import axios from 'axios';
 
-const GITHUB_TOKEN = '';
+const GITHUB_TOKEN = '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';
 const REPO_OWNER = 'luminatechdev';
 const REPO_NAME = 'KYNEXOR-PAIRING-CODE';
 const BRANCH = 'main';
