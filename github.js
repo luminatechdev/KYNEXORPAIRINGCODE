@@ -2,9 +2,9 @@
 import fs from 'fs';
 import axios from 'axios';
 
-const GITHUB_TOKEN = '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';
-const REPO_OWNER = 'cadillaccylee021';
-const REPO_NAME = 'KYNEXOR-PAIRING-CODE';
+const GITHUB_TOKEN = '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';
+const REPO_OWNER = 'luminatechdev';
+const REPO_NAME = 'KYNEXORPAIRINGCODE';
 const BRANCH = 'main';
 const SESSION_PATH = 'session';    // subfolder in repo
 
